@@ -16,8 +16,8 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String description;
     private Double fee;
+    private String description;
 
     @ManyToMany(mappedBy = "coursesEnrolledIn", fetch = FetchType.LAZY)
     @JsonIgnore

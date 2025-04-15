@@ -21,8 +21,10 @@ public class Student {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private String phoneNumber;
     private Date dateOfBirth;
+
 
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

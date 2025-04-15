@@ -15,20 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/student")
+@CrossOrigin(origins="http://localhost:63342")
 public class  StudentController {
 
     private final StudentService studentService;
-
     public StudentController(StudentService studentService) {
-
         this.studentService = studentService;
     }
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Student> getStudentById(@PathVariable long id) {
+//        Student student = studentService.getStudentById(id);
+//        return new ResponseEntity<>(student, HttpStatus.OK);
+//    }
 //this is used to register student
     @PostMapping("/create")
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
@@ -49,6 +55,21 @@ public class  StudentController {
         studentService.deleteStudentById(studentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+//findi student by email
+    @GetMapping("/{email}")
+    public ResponseEntity<Student> getStudentByEmail(@PathVariable String email, @RequestParam String password) {
+
+        Student student = studentService.getStudentByEmail(email);//student
+        if (student != null) {
+            return new ResponseEntity<>(student, HttpStatus.OK);
+        }
+        else {
+            System.out.println("Student was not found");
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 
 }
 

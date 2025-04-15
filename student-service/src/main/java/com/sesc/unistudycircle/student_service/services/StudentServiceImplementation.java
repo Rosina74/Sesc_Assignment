@@ -52,7 +52,11 @@ public class StudentServiceImplementation implements StudentService {
     }
 
     @Override
-    public Student getStudentByIdJson(long id) {
-        return null;
+    public Student getStudentByEmail(String email) {
+        if(studentRepository.existsStudentByEmail(email)){
+            System.out.println(studentRepository.existsStudentByEmail(email));
+            return studentRepository.findByEmail(email).getFirst();
+        }
+        else return null;
     }
 }

@@ -13,5 +13,5 @@ public interface StudentService {
    Student updateStudentById(long studentId, Student updatedStudent);
     List<Student> getAllStudents();
 
-    Student getStudentByIdJson(long id);
+    Student getStudentByEmail(String email);
 }
