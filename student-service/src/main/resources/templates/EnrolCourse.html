@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Enrollment</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    form {
+      width: 300px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    input, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Enroll a Student</h2>
+<form id="enrollmentForm">
+  <label for="studentId">Student ID:</label>
+  <input type="text" id="studentId" required>
+
+  <label for="courseId">Course ID:</label>
+  <input type="text" id="courseId" required>
+
+  <label for="email">your Email:</label>
+  <input type="email" id="email" required placeholder="Please enter your email">
+
+  <button type="submit" value="enroll">Enroll</button> <br>
+
+
+</form>
+
+<script>
+  document.getElementById("enrollmentForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const studentId = document.getElementById("studentId").value;
+    const courseId = document.getElementById("courseId").value;
+    const email = document.getElementById("email").value;
+
+    const enrollmentData = {
+      studentId,
+      courseId,
+      email
+    };
+      fetch(`http://localhost:8082/courses/enroll/course/${courseId}/student/${studentId}/email${email}`, { // Replace with actual API URL
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+              .then(response => {
+                if(response.ok){
+                  alert("Enrolled Successfuly")
+                  window.location.href='ViewEnrolment.html'
+
+                }
+                else {
+                  alert('Enrolment failed')
+                }
+              })
+  })
+
+</script>
+
+</body>
+</html>

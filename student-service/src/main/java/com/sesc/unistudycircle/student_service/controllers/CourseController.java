@@ -35,4 +35,12 @@ public class CourseController {
         courseService.enrollStudent(courseId, studentId, email);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+        @GetMapping("/viewEnrolledCourse/{studentId}/{email}")
+    public ResponseEntity<List<Course>>getEnrolledCourse(@PathVariable String studentId, @PathVariable String email) {
+        List<Course> enrolledCourse = courseService.getEnrolledCourseByStudentEmail(email);
+        return new ResponseEntity<>(enrolledCourse, HttpStatus.OK);
+    }
+
+
 }

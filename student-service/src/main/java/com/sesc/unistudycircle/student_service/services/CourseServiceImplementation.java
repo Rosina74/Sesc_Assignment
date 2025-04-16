@@ -51,4 +51,10 @@ public class CourseServiceImplementation  implements CourseService {
         }
         else System.out.println("Student not found" + email);
     }
+
+    @Override
+    public List<Course> getEnrolledCourseByStudentEmail(String email) {
+        Student student = studentRepository.findByEmail(email).getFirst();
+        return new ArrayList<>(student.getCoursesEnrolledIn());
+    }
 }
