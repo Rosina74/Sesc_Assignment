@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .profile-container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 300px;
+            margin: auto;
+            background-color: #f9f9f9;
+        }
+        .navbar {
+            background-color: mediumpurple;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .navbar a {
+            display: inline-block;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+
+        .navbar a:hover {
+            background-color: hotpink;
+            color: black;
+        }
+        .form-container {
+            margin: 20px auto;
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        button {
+            background-color: mediumpurple;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: hotpink;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="EnrolCourse.html">Enrol Course</a>
+    <a href="studentPage.html">Student Page</a>
+    <a href="ViewEnrolment.html">View Enrolment</a>
+    <a href="ViewStudentProfile.html">View Student Profile</a>
+</div>
+
+<h2>Student Profile</h2>
+<div class="profile-container">
+    <p><strong>StudentID:</strong> <span id="studentid"></span></p>
+    <p><strong>First Name:</strong> <span id="fname"></span></p>
+    <p><strong>Last Name:</strong> <span id="lname"></span></p>
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Phone Number:</strong> <span id="phone"></span></p>
+    <p><strong>Date of Birth:</strong> <span id="dob"></span></p>
+</div>
+
+<!-- Form to Update First Name & Last Name -->
+<div class="form-container">
+    <h2>Update Your Name</h2>
+    <form id="updateForm">
+        <label>First Name:</label>
+        <input type="text" id="editFname" placeholder="Enter First Name">
+
+        <label>Last Name:</label>
+        <input type="text" id="editLname" placeholder="Enter Last Name">
+
+        <button type="submit">Update</button>
+    </form>
+</div>
+
+<script>
+    // Retrieve email from sessionStorage
+    const email = sessionStorage.getItem("email");
+    let studentdetails = null;
+
+    async function fetchStudentDetails() {
+        try {
+            const response = await fetch(`http://localhost:8082/student/${email}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const studentdata = await response.json();
+            studentdetails = studentdata;
+
+            document.getElementById("studentid").textContent = studentdata.externalStudentId;
+            document.getElementById("fname").textContent = studentdata.firstName;
+            document.getElementById("lname").textContent = studentdata.lastName;
+            document.getElementById("email").textContent = studentdata.email;
+            document.getElementById("phone").textContent = studentdata.phoneNumber;
+            document.getElementById("dob").textContent = studentdata.dateOfBirth;
+
+        } catch (error) {
+            console.error("Error fetching student data:", error);
+        }
+    }
+
+    fetchStudentDetails();
+
+    document.getElementById("updateForm").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Prevent page refresh
+
+        const updatedFname = document.getElementById("editFname").value;
+        const updatedLname = document.getElementById("editLname").value;
+
+        const externalStudentId = studentdetails.externalStudentId;
+        const email = studentdetails.email;
+        const phone = studentdetails.phoneNumber;
+        const dob = studentdetails.dateOfBirth;
+        const password = studentdetails.password;
+
+        try {
+            const response = await fetch(`http://localhost:8082/student/${externalStudentId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email, firstName: updatedFname,
+                    lastName: updatedLname, phoneNumber: phone, dateOfBirth: dob,
+                    password: password, externalStudentId: externalStudentId
+                })
+            });
+
+            if (response.ok) {
+                alert("Details updated successfully!");
+                fetchStudentDetails(); // Refresh data
+            } else {
+                alert("Failed to update details!");
+            }
+        } catch (error) {
+            console.error("Error updating student details:", error);
+        }
+    });
+</script>
+
+</body>
+</html>

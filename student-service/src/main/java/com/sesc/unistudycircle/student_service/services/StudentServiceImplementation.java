@@ -10,40 +10,39 @@ import java.util.List;
 
 @Service
 public class StudentServiceImplementation implements StudentService {
-    private final StudentRepository repository;
     private final StudentRepository studentRepository;
 
-    public StudentServiceImplementation(StudentRepository repository, StudentRepository studentRepository) {
-        this.repository = repository;
+    public StudentServiceImplementation(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
     @Override
     public Student saveStudent(Student student) {
-        return repository.save(student);
+        return studentRepository.save(student);
     }
 
     @Override
     public Student getStudentById(Long studentId) {
-        return repository.findById(studentId)
+        return studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException("stu"+studentId));
     }
 
     @Override
     public void deleteStudentById(Long studentId) {
-        if (!repository.existsById(studentId)){
+        if (!studentRepository.existsById(studentId)){
             throw new StudentNotFoundException("student not found with ID: " + studentId);
         }
 
     }
 
     @Override
-    public Student updateStudentById(long studentId, Student updatedStudent) {
-        if (!repository.existsById(studentId)) {
+    public Student updateStudentById(String studentId, Student updatedStudent) {
+        if (!studentRepository.existsByExternalStudentId(studentId)) {
             throw new StudentNotFoundException("student not found with ID: " + studentId);
         }
-        updatedStudent.setId(studentId);
-        return repository.save(updatedStudent);
+        Student student = studentRepository.findByExternalStudentId(studentId);
+        updatedStudent.setId(student.getId());
+        return studentRepository.save(updatedStudent);
     }
 
     @Override
@@ -56,6 +55,14 @@ public class StudentServiceImplementation implements StudentService {
         if(studentRepository.existsStudentByEmail(email)){
             System.out.println(studentRepository.existsStudentByEmail(email));
             return studentRepository.findByEmail(email).getFirst();
+        }
+        else return null;
+    }
+
+    @Override
+    public Student getStudentByExternalId(String externalStudentId) {
+        if(studentRepository.existsByExternalStudentId(externalStudentId)){
+            return studentRepository.findByExternalStudentId(externalStudentId);
         }
         else return null;
     }

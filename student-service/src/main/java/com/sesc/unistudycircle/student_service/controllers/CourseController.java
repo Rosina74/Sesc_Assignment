@@ -33,6 +33,7 @@ public class CourseController {
     @PostMapping("/enroll/course/{courseId}/student/{studentId}/email{email}")
     public ResponseEntity<Course> enrollInCourse(@PathVariable Long courseId, @PathVariable String studentId, @PathVariable String email) {
         courseService.enrollStudent(courseId, studentId, email);
+        System.out.println("Enrolled In Course");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

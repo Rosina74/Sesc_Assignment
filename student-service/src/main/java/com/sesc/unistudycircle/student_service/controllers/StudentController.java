@@ -35,6 +35,8 @@ public class  StudentController {
 //        Student student = studentService.getStudentById(id);
 //        return new ResponseEntity<>(student, HttpStatus.OK);
 //    }
+
+
 //this is used to register student
     @PostMapping("/create")
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
@@ -44,7 +46,7 @@ public class  StudentController {
 
     @PutMapping("/{studentId}")
     public ResponseEntity<Student> updateStudent(
-            @PathVariable long studentId,
+            @PathVariable String studentId,
             @RequestBody Student updatedstudent) {
         Student student = studentService.updateStudentById(studentId, updatedstudent);
         return new ResponseEntity<>(student, HttpStatus.OK);
@@ -56,13 +58,14 @@ public class  StudentController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//findi student by email
-    @GetMapping("/{email}")
+    //findi student by email
+    @PostMapping("/{email}")
     public ResponseEntity<Student> getStudentByEmail(@PathVariable String email, @RequestParam String password) {
-
         Student student = studentService.getStudentByEmail(email);//student
         if (student != null) {
-            return new ResponseEntity<>(student, HttpStatus.OK);
+            if (student.getPassword().equals(password)) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
         }
         else {
             System.out.println("Student was not found");
@@ -70,6 +73,16 @@ public class  StudentController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-
+    @GetMapping("/{email}")
+    public ResponseEntity<Student> getStudentByExternal(@PathVariable String email) {
+        Student student = studentService.getStudentByEmail(email);
+        if (student != null) {
+            return new ResponseEntity<>(student, HttpStatus.OK);
+        }
+        else {
+            System.out.println("Student was not found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
 
