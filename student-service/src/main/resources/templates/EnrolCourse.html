@@ -46,6 +46,8 @@
   <a href="studentPage.html">Student Page</a>
   <a href="ViewEnrolment.html">View Enrolment</a>
   <a href="ViewStudentProfile.html">View Student Profile</a>
+  <a href="Graduation.html">Graduation</a>
+
 </div>
 
 <h2>Enroll a Student</h2>
@@ -61,10 +63,11 @@
 
   <button type="submit" value="enroll">Enroll</button> <br>
 
-
 </form>
 
 <script>
+  const status = sessionStorage.getItem("status")
+  console.log(sessionStorage.getItem("status"))
   document.getElementById("enrollmentForm").addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -77,23 +80,29 @@
       courseId,
       email
     };
+    if (status === null || status === "PAID") {
       fetch(`http://localhost:8082/courses/enroll/course/${courseId}/student/${studentId}/email${email}`, { // Replace with actual API URL
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         }
       })
-              .then(response => {
-                if(response.ok){
-                  alert("Enrolled Successfuly")
-                  window.location.href='ViewEnrolment.html'
-
-                }
-                else {
-                  alert('Enrolment failed............')
-                }
-              })
+              .then(response => response.json())
+              .then(data => {
+                console.log(data)
+                alert("Student enrolled succefully")
+                console.log(data.reference)
+                sessionStorage.setItem("reference", data.reference)
+                sessionStorage.removeItem("status")
+                sessionStorage.setItem("status", data.status)
+                location.reload()
+              });
+    }
+    else{
+      alert("you have an outstanding balance , please pay to enroll a new course")
+    }
   })
+
 
 </script>
 

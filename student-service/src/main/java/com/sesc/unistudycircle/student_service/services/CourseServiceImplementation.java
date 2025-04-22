@@ -1,6 +1,7 @@
 package com.sesc.unistudycircle.student_service.services;
 
 import com.sesc.unistudycircle.student_service.entities.Course;
+import com.sesc.unistudycircle.student_service.entities.Invoice;
 import com.sesc.unistudycircle.student_service.entities.Student;
 import com.sesc.unistudycircle.student_service.repositories.CourseRepository;
 import com.sesc.unistudycircle.student_service.repositories.StudentRepository;
@@ -42,14 +43,16 @@ public class CourseServiceImplementation  implements CourseService {
     }
 
     @Override
-    public void enrollStudent(Long course_id, String student_id, String email) {
+    public Invoice enrollStudent(Long course_id, String student_id, String email) {
         Course course = courseRepository.findById(course_id).get();
         if(studentRepository.existsStudentByEmail(email)){
             Student student = studentRepository.findByEmail(email).getFirst();
-            enrolmentService.enrolStudentInCourse(student, course);
+            Invoice invoice = enrolmentService.enrolStudentInCourse(student, course);
             studentService.saveStudent(student);
+            return invoice;
         }
         else System.out.println("Student not found" + email);
+        return null;
     }
 
     @Override

@@ -1,7 +1,10 @@
 package com.sesc.unistudycircle.student_service.controllers;
 
 
+import com.sesc.unistudycircle.student_service.entities.Account;
+import com.sesc.unistudycircle.student_service.entities.Invoice;
 import com.sesc.unistudycircle.student_service.entities.Student;
+import com.sesc.unistudycircle.student_service.services.IntegrationService;
 import com.sesc.unistudycircle.student_service.services.StudentService;
 import jakarta.persistence.PostUpdate;
 import org.springframework.hateoas.EntityModel;
@@ -22,11 +25,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/student")
-@CrossOrigin(origins="http://localhost:63342")
+@CrossOrigin(origins={"http://localhost:63342", "http://localhost:8081"})
 public class  StudentController {
 
+    private final IntegrationService integrationService;
     private final StudentService studentService;
-    public StudentController(StudentService studentService) {
+    public StudentController(IntegrationService integrationService, StudentService studentService) {
+        this.integrationService = integrationService;
         this.studentService = studentService;
     }
 
@@ -68,21 +73,27 @@ public class  StudentController {
             }
         }
         else {
-            System.out.println("Student was not found");
+            System.out.println("Student was not found in email's");
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<Student> getStudentByExternal(@PathVariable String email) {
-        Student student = studentService.getStudentByEmail(email);
-        if (student != null) {
-            return new ResponseEntity<>(student, HttpStatus.OK);
+    @GetMapping("/{emailorinvoiceref}")
+    public ResponseEntity<Object> getStudentByExternal(@PathVariable String emailorinvoiceref) {
+    System.out.println(emailorinvoiceref);
+        if(emailorinvoiceref.contains(".com")){
+            Student student = studentService.getStudentByEmail(emailorinvoiceref);
+            if (student != null) {
+                return new ResponseEntity<>(student, HttpStatus.OK);
+            }
         }
         else {
-            System.out.println("Student was not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            Invoice invoiceStatus = integrationService.getInvoiceById(emailorinvoiceref);
+            System.out.println(invoiceStatus);
+            return new ResponseEntity<>(invoiceStatus,HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
 

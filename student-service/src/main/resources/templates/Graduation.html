@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graduation Eligibility</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 50px;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      margin: auto;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4CAF50;
+    }
+    .message {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+    .celebrate {
+      display: none;
+      font-size: 30px;
+      font-weight: bold;
+      color: #FF4500;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">Graduation Eligibility</div>
+  <div class="message" id="message">Checking your status...</div>
+  <div class="celebrate" id="celebrate">🎉 Congratulations! You are eligible to graduate! 🎉</div>
+  <br>
+  <div id="paybutton"></div>
+</div>
+
+<script>
+  const studentId = sessionStorage.getItem("studentId");
+  const invoiceReference = sessionStorage.getItem("reference")
+  console.log(studentId)
+  console.log(invoiceReference)
+  async function checkGraduationStatus() {
+    try {
+      // Replace this URL with the actual API endpoint
+      const response = await fetch(`http://localhost:8082/student/${invoiceReference}`);
+      const data = await response.json();
+      // console.log(data)
+      // const balance = data.status
+
+      const status = sessionStorage.getItem("status")
+      console.log("status is:", data.status)
+
+      if (data.status === "OUTSTANDING") {
+        document.getElementById("message").innerText =
+                `Sorry, you have outstanding fees. Please clear them to graduate.. Invoice Ref to pay:${invoiceReference}
+                `;
+        document.getElementById("paybutton").innerHTML = `
+        <button onclick="openPayInvoice()">pay</button>
+        `
+      } else {
+
+        sessionStorage.removeItem("status")
+        sessionStorage.setItem("status", data.status)
+
+        document.getElementById("message").style.display = "none";
+        document.getElementById("celebrate").style.display = "block";
+      }
+    } catch (error) {
+      document.getElementById("message").innerText = "Error fetching graduation status.";
+      console.error(error);
+    }
+  }
+    function openPayInvoice() {
+      window.open("http://localhost:8081/portal", "_blank"); // Opens in a new tab
+    }
+
+  checkGraduationStatus();
+</script>
+
+</body>
+</html>

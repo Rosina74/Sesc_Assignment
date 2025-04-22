@@ -60,6 +60,8 @@
             .then(response=>{
                 if (response.ok){
                     alert("successful")
+                    sessionStorage.clear()
+                    sessionStorage.setItem("studentId", studentData.externalStudentId)
                     //send studentidto profile
                 }
             })

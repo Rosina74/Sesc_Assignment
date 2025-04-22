@@ -1,6 +1,7 @@
 package com.sesc.unistudycircle.student_service.controllers;
 
 import com.sesc.unistudycircle.student_service.entities.Course;
+import com.sesc.unistudycircle.student_service.entities.Invoice;
 import com.sesc.unistudycircle.student_service.services.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/courses")
-@CrossOrigin(origins="http://localhost:63342")
+@CrossOrigin(origins={"http://localhost:63342", "http://localhost:8081"})
 public class CourseController {
 
     private final CourseService courseService;
@@ -31,10 +32,11 @@ public class CourseController {
     }
 
     @PostMapping("/enroll/course/{courseId}/student/{studentId}/email{email}")
-    public ResponseEntity<Course> enrollInCourse(@PathVariable Long courseId, @PathVariable String studentId, @PathVariable String email) {
-        courseService.enrollStudent(courseId, studentId, email);
-        System.out.println("Enrolled In Course");
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Invoice> enrollInCourse(@PathVariable Long courseId, @PathVariable String studentId, @PathVariable String email) {
+        Invoice invoice = courseService.enrollStudent(courseId, studentId, email);
+
+        System.out.println(invoice);
+        return new ResponseEntity<>(invoice, HttpStatus.OK);
     }
 
         @GetMapping("/viewEnrolledCourse/{studentId}/{email}")
