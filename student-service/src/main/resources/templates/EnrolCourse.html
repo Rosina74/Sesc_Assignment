@@ -81,7 +81,7 @@
       email
     };
     if (status === null || status === "PAID") {
-      fetch(`http://localhost:8082/courses/enroll/course/${courseId}/student/${studentId}/email${email}`, { // Replace with actual API URL
+      fetch(`http://localhost:8080/courses/enroll/course/${courseId}/student/${studentId}/email${email}`, { // Replace with actual API URL
         method: "POST",
         headers: {
           "Content-Type": "application/json"

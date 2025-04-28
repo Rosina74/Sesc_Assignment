@@ -27,36 +27,44 @@ public class CourseServiceImplementation  implements CourseService {
         this.studentService = studentService;
     }
 
+    // getting all courses
     @Override
     public List<Course> getAllCourse() {
         return courseRepository.findAll();
     }
 
+// get course by Id
     @Override
     public Course getCourseById(Long id) {
         return courseRepository.findById(id).get();
     }
 
+//creating course
     @Override
     public Course createCourse(Course course) {
         return courseRepository.save(course);
     }
 
+//enroll student
     @Override
     public Invoice enrollStudent(Long course_id, String student_id, String email) {
+        //find course by course_id
         Course course = courseRepository.findById(course_id).get();
+
+        // if the student exist in the database
+        // save student and invoice
         if(studentRepository.existsStudentByEmail(email)){
             Student student = studentRepository.findByEmail(email).getFirst();
             Invoice invoice = enrolmentService.enrolStudentInCourse(student, course);
             studentService.saveStudent(student);
             return invoice;
         }
-        else System.out.println("Student not found" + email);
-        return null;
+        else return null;
     }
-
+// Get enrolled Course by student email
     @Override
     public List<Course> getEnrolledCourseByStudentEmail(String email) {
+        // if student exist in the database, find courses enrolled
         Student student = studentRepository.findByEmail(email).getFirst();
         return new ArrayList<>(student.getCoursesEnrolledIn());
     }

@@ -16,18 +16,19 @@ public class IntegrationService {
         this.restClient = restClient;
     }
 
-
+// create an acount for finance
     public Account createAccount(Account account) {
          return restClient.post()
-                .uri("http://localhost:8081/accounts")
+                .uri("http://financeapp:8081/accounts")
                  .body(account)
                  .retrieve()
                  .body(Account.class);
     }
+    // get account from finance by externalstudentId
     public Account getAccount(String externalStudentId) {
         try{
             return restClient.get()
-                    .uri("http://localhost:8081/accounts/student/"+ externalStudentId)
+                    .uri("http://financeapp:8081/accounts/student/"+ externalStudentId)
                     .retrieve()
                     .body(Account.class);
         }
@@ -36,18 +37,19 @@ public class IntegrationService {
         }
 
     }
+    //  creating course fee invoice
     public Invoice createCourseFeeInvoice(Invoice invoice){
         return restClient.post()
-                .uri("http://localhost:8081/invoices/")
+                .uri("http://financeapp:8081/invoices/")
                 .body(invoice)
                 .retrieve()
                 .body(Invoice.class);
     }
-
+//get invoice by reference
     public Invoice getInvoiceById(@PathVariable String reference) {
         System.out.println(reference);
          return restClient.get()
-                .uri("http://localhost:8081/invoices/reference/"+ reference)
+                .uri("http://financeapp:8081/invoices/reference/"+ reference)
                 .retrieve()
                 .body(Invoice.class);
     }

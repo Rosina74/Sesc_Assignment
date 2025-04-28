@@ -2,11 +2,111 @@
 <html>
 <head>
     <title>Student Form</title>
+    <style>
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* Title Styling */
+        h2 {
+            color: #fff;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Form Container Styling */
+        #register {
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            text-align: center;
+        }
+
+        /* Label Styling */
+        #register label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-align: left;
+            color: #333;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /*Input Field Styling */
+        #register input[type="text"],
+        #register input[type="tel"],
+        #register input[type="email"],
+        #register input[type="date"],
+        #register input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Input Focus Effect */
+        #register input:focus {
+            border-color: #6a11cb;
+            outline: none;
+        }
+
+        /* Submit and Button Styling */
+        #register input[type="submit"],
+        button {
+            width: 100%;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+            margin-top: 15px;
+        }
+
+        /* Hover Effect */
+        #register input[type="submit"]:hover,
+        button:hover {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+        }
+
+        /* Login Button */
+        button {
+            background: none;
+            border: none;
+            color: #6a11cb;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            text-decoration: underline;
+        }
+
+
+    </style>
 </head>
 <body>
-<h2>Student Registration Form</h2>
+<h2>STUDENT REGISTRATION FORM</h2>
 <form id="register">
     <label for="externalStudentId">Student ID:</label>
+
     <input type="text" id="externalStudentId" name="externalStudentId"><br><br>
 
     <label for="firstName">First Name:</label>
@@ -28,12 +128,13 @@
     <input type="date" id="dateOfBirth" name="dateOfBirth" required><br><br>
 
     <input type="submit" value="Register">
+    <button onclick=login()>Login</button><br><br>
 
 </form>
 <br>
-<button onclick=login()>Login</button><br><br>
 
 <script>
+
     document.getElementById("register").addEventListener('submit', function (event){
         event.preventDefault()
 
@@ -50,7 +151,7 @@
         };
         console.log(studentData)
 
-        fetch("http://localhost:8082/student/create", {
+        fetch("http://localhost:8080/student/create", {
             method: "POST", // Use POST to send data
             headers: {
                 "Content-Type": "application/json"
@@ -62,12 +163,13 @@
                     alert("successful")
                     sessionStorage.clear()
                     sessionStorage.setItem("studentId", studentData.externalStudentId)
-                    //send studentidto profile
+                    //send studentid to profile
                 }
             })
     })
     function login(){
         window.location.href='Login.html'
+        // connecting to the login page
     }
 
 

@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/courses")
-@CrossOrigin(origins={"http://localhost:63342", "http://localhost:8081"})
 public class CourseController {
 
     private final CourseService courseService;
@@ -19,26 +18,25 @@ public class CourseController {
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
-
+//creating course
     @PostMapping("/create")
     public ResponseEntity<Course> createCourse(@RequestBody Course course) {
         courseService.createCourse(course);
         return new ResponseEntity<>(course, HttpStatus.CREATED);
     }
-
+//getting courses from the database
     @GetMapping
     public ResponseEntity<List<Course>> getAllCourse() {
         return new ResponseEntity<>(courseService.getAllCourse(), HttpStatus.OK);
     }
-
+// in this method we enrolled student though the email and give them invoice
     @PostMapping("/enroll/course/{courseId}/student/{studentId}/email{email}")
     public ResponseEntity<Invoice> enrollInCourse(@PathVariable Long courseId, @PathVariable String studentId, @PathVariable String email) {
         Invoice invoice = courseService.enrollStudent(courseId, studentId, email);
 
-        System.out.println(invoice);
         return new ResponseEntity<>(invoice, HttpStatus.OK);
     }
-
+// In this method we get enrolled course by student email.
         @GetMapping("/viewEnrolledCourse/{studentId}/{email}")
     public ResponseEntity<List<Course>>getEnrolledCourse(@PathVariable String studentId, @PathVariable String email) {
         List<Course> enrolledCourse = courseService.getEnrolledCourseByStudentEmail(email);

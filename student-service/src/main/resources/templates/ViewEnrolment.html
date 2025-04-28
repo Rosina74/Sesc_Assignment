@@ -86,7 +86,7 @@
         const email = document.getElementById("email").value;
 
         try {
-            const response = await fetch(`http://localhost:8082/courses/viewEnrolledCourse/${studentId}/${email}`); // Replace with actual API URL
+            const response = await fetch(`http://localhost:8080/courses/viewEnrolledCourse/${studentId}/${email}`); // Replace with actual API URL
             const courses = await response.json();
 
             if (response.ok && courses.length > 0) {

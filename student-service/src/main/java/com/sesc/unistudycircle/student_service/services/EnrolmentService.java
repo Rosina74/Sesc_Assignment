@@ -20,21 +20,17 @@ public class EnrolmentService {
         this.studentRepository = studentRepository;
         this.integrationService = integrationService;
     }
-
+//enroll student and save
     public Invoice enrolStudentInCourse(Student student, Course course) {
         student.enrollCourse(course);
         studentRepository.save(student);
-
-
-
-
         if(integrationService.getAccount(student.getExternalStudentId()) != null) {
 
-            System.out.println("came in if");
+            // get account by external student id
             Account account = integrationService.getAccount(student.getExternalStudentId());
             Invoice invoice = new Invoice();
-            System.out.println("came in if");
 
+            //give account invoice
             invoice.setAccount(account);
             invoice.setType(Invoice.Type.TUITION_FEES);
             invoice.setAmount(course.getFee());
@@ -45,11 +41,9 @@ public class EnrolmentService {
         }
 
         else{
-            System.out.println("CAME in else");
+            //create account
             Account account = new Account();
-            System.out.println("CAME in else");
             account.setStudentId(student.getExternalStudentId());
-            System.out.println("came in else");
             Invoice invoice = new Invoice();
             invoice.setAccount(account);
             invoice.setType(Invoice.Type.TUITION_FEES);
